@@ -1,0 +1,1 @@
+Solutions to Codility.com lessons. Written in C. Each lesson is in separate folder named after Lesson name.
