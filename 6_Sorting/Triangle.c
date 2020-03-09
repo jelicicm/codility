@@ -1,37 +1,29 @@
 /*
-A non-empty array A consisting of N integers is given. The product of triplet (P, Q, R) equates to A[P] * A[Q] * A[R] (0 ≤ P < Q < R < N).
+An array A consisting of N integers is given. A triplet (P, Q, R) is triangular if 0 ≤ P < Q < R < N and:
+        A[P] + A[Q] > A[R],
+        A[Q] + A[R] > A[P],
+        A[R] + A[P] > A[Q].
 
-For example, array A such that:
-  A[0] = -3
-  A[1] = 1
-  A[2] = 2
-  A[3] = -2
-  A[4] = 5
-  A[5] = 6
-
-contains the following example triplets:
-        (0, 1, 2), product is −3 * 1 * 2 = −6
-        (1, 2, 4), product is 1 * 2 * 5 = 10
-        (2, 4, 5), product is 2 * 5 * 6 = 60
-
-Your goal is to find the maximal product of any triplet.
+For example, consider array A such that:
+	A[0] = 10    A[1] = 2    A[2] = 5
+	A[3] = 1     A[4] = 8    A[5] = 20
+Triplet (0, 2, 4) is triangular.
 
 Write a function:
     int solution(int A[], int N);
-that, given a non-empty array A, returns the value of the maximal product of any triplet.
+that, given an array A consisting of N integers, returns 1 if there exists a triangular triplet for this array and returns 0 otherwise.
 
 For example, given array A such that:
-  A[0] = -3
-  A[1] = 1
-  A[2] = 2
-  A[3] = -2
-  A[4] = 5
-  A[5] = 6
-the function should return 60, as the product of triplet (2, 4, 5) is maximal.
+  A[0] = 10    A[1] = 2    A[2] = 5
+  A[3] = 1     A[4] = 8    A[5] = 20
+
+the function should return 1, as explained above. Given array A such that:
+  A[0] = 10    A[1] = 50    A[2] = 5    A[3] = 1
+the function should return 0.
 
 Write an efficient algorithm for the following assumptions:
-        N is an integer within the range [3..100,000];
-        each element of array A is an integer within the range [−1,000..1,000].
+        N is an integer within the range [0..100,000];
+        each element of array A is an integer within the range [−2,147,483,648..2,147,483,647].
 */
 
 void merge(int arr[], int l, int m, int r) { 
@@ -53,13 +45,11 @@ void merge(int arr[], int l, int m, int r) {
     j = 0; // Initial index of second subarray 
     k = l; // Initial index of merged subarray 
     while (i < n1 && j < n2) { 
-        if (L[i] <= R[j]) 
-        { 
+        if (L[i] <= R[j]) { 
             arr[k] = L[i]; 
             i++; 
         } 
-        else
-        { 
+        else { 
             arr[k] = R[j]; 
             j++; 
         } 
@@ -101,13 +91,33 @@ void merge_sort(int arr[], int l, int r) {
 
 int solution(int A[], int N) {
     // write your code in C99 (gcc 6.2.0)
+    int i = 0;
+    int first, second, third;
+    
+    if(N < 3) {
+        return 0;
+    }
     
     merge_sort(A, 0, N-1);
     
-    int max = A[N-1]*A[N-2]*A[N-3];
-    if(A[0]*A[1]*A[N-1] > max) {
-        max = A[0]*A[1]*A[N-1];
+    while(A[i] < 0) { 
+        i++; 
     }
     
-    return max;
+    for(; i < N - 2; i++) {
+        first  = A[i];
+        second = A[i+1];
+        third  = A[i+2];
+        
+        if((long)first + (long)second > (long)third) {
+        //    if((long)b + (long)c > (long)a) {     //always true, since the array is sorted in ascending order
+        //        if((long)a + (long)c > (long)b) { //always true, since the array is sorted in ascending order
+            return 1;
+        //        }
+        //    }
+        }
+    }
+    
+    return 0;
 }
+
