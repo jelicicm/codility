@@ -31,3 +31,45 @@ Write an efficient algorithm for the following assumptions:
         the elements of A are all distinct.
 */
 
+#define UPSTREAM    0
+#define DOWNSTREAM  1
+
+int solution(int A[], int B[], int N) {
+    // write your code in C99 (gcc 6.2.0)
+    int *stack = calloc(N, sizeof(int));
+    int survived = 0;
+    int on_stack = 0;
+    int i;
+    
+    for(i = 0; i < N; i++) {
+        switch(B[i]) {
+            case UPSTREAM:
+                if(on_stack == 0) {
+                    //printf("%d survived\n", A[i]);
+                    survived++;
+                } else {
+                    if(stack[on_stack-1] > A[i]) {
+                        //printf("%d (on stack) eats %d\n", stack[on_stack-1], A[i]);
+                        //do nothing
+                    } else {
+                        //printf("%d eats %d (on stack)\n", A[i], stack[on_stack-1]);
+                        while(A[i] > stack[on_stack-1] && on_stack >= 1) {
+                            on_stack--;                            
+                        }
+                        if(on_stack == 0) {
+                            survived++;
+                        }
+                    }
+                }
+            break;
+            case DOWNSTREAM:
+                stack[on_stack++] = A[i];
+                //printf("Adding %d to stack\n", A[i]);
+            break;
+        }
+    }
+    
+    free(stack);
+    
+    return survived + on_stack;
+}
