@@ -1,0 +1,9 @@
+#ignore everything
+*
+
+#except these files
+!.gitignore
+!*.c
+
+#even if they are in subdirectories
+!*/
